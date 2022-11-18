@@ -1,4 +1,4 @@
-import React , {useState} from 'react'
+import React , {useState,useEffect} from 'react'
 import { Link , NavLink , useNavigate } from "react-router-dom";
 import './Login.css';
 function SignUpForm() {
@@ -6,6 +6,7 @@ function SignUpForm() {
   const [email,setemail] = useState("");
   const [password,setpassword] = useState("");
   const [message,setmessage] = useState("");
+  const [quotes,setquotes] = useState({});
   const navigate = useNavigate();
   const checkuser = (e) => {
     e.preventDefault();
@@ -31,8 +32,25 @@ function SignUpForm() {
         setmessage(res["resp"]);
       })
   }
+  const getRndInteger = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
+  }
+  const fetchquotes = () => {
+    fetch('https://type.fit/api/quotes')
+      .then(response => response.json())
+      .then(response => { console.log(response[getRndInteger(0,1200)]); setquotes(response[getRndInteger(0,1200)])})
+      .catch(err => console.error(err));
+  }
+    useEffect(() => {
+    fetchquotes();
+    },[]);
+
   return (
     <div className="appAside" >
+        <div className="quotes">
+            <div id = "say">{quotes["text"]}</div>
+            <div id = "aname">- {quotes["author"]}</div>
+          </div>
           <div className="appForm">
             <div className="pageSwitcher">
               <NavLink
